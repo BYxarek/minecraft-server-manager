@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace MinecraftServerManager;
 
-public sealed record UpdateResult(Version Current, Version? Latest, string Url, string? Error)
+public sealed record UpdateResult(Version Current, Version? Latest, string Url, string? Error, bool NoRelease = false)
 {
     public bool Available => Latest != null && Latest > Current;
 }
@@ -22,7 +22,7 @@ public static class UpdateChecker
         {
             using var response = await client.GetAsync(ReleasesApi);
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                return new(current, null, "https://github.com/BYxarek/minecraft-server-manager/releases", null);
+                return new(current, null, "https://github.com/BYxarek/minecraft-server-manager/releases", null, true);
             response.EnsureSuccessStatusCode();
             using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
             var tag = json.RootElement.GetProperty("tag_name").GetString()?.TrimStart('v', 'V');

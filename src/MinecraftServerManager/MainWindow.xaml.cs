@@ -181,7 +181,7 @@ public partial class MainWindow : Window
         UpdateStatus.Text = "Проверка обновлений…";
         var result = await UpdateChecker.Check();
         updateUrl = result.Available ? result.Url : null;
-        UpdateStatus.Text = result.Available ? $"Доступна версия {result.Latest}. Нажмите, чтобы открыть релиз." : result.Error != null ? "Не удалось проверить обновления." : "Установлена актуальная версия.";
+        UpdateStatus.Text = result.Available ? $"Доступна версия {result.Latest}. Нажмите, чтобы открыть релиз." : result.NoRelease ? "Публичных релизов пока нет." : result.Error != null ? "Не удалось проверить обновления." : "Установлена актуальная версия.";
         if (result.Error != null && showError) ShowNotice("GitHub: " + result.Error);
         if (result.Available) UpdateStatus.MouseLeftButtonUp += (_, _) => Process.Start(new ProcessStartInfo(updateUrl!) { UseShellExecute = true });
     }
