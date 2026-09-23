@@ -1,0 +1,20 @@
+<Application x:Class="MinecraftServerManager.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" StartupUri="MainWindow.xaml">
+  <Application.Resources>
+    <SolidColorBrush x:Key="BackgroundBrush" Color="#101310"/>
+    <SolidColorBrush x:Key="SideBrush" Color="#171B17"/>
+    <SolidColorBrush x:Key="PanelBrush" Color="#1B211B"/>
+    <SolidColorBrush x:Key="InputBrush" Color="#111511"/>
+    <SolidColorBrush x:Key="LineBrush" Color="#303830"/>
+    <SolidColorBrush x:Key="TextBrush" Color="#F2F4EF"/>
+    <SolidColorBrush x:Key="MutedBrush" Color="#9CA69A"/>
+    <SolidColorBrush x:Key="GreenBrush" Color="#67C36B"/>
+    <Style TargetType="Window"><Setter Property="Background" Value="{StaticResource BackgroundBrush}"/><Setter Property="Foreground" Value="{StaticResource TextBrush}"/><Setter Property="FontFamily" Value="Segoe UI"/><Setter Property="FontSize" Value="14"/></Style>
+    <Style TargetType="TextBlock"><Setter Property="Foreground" Value="{StaticResource TextBrush}"/></Style>
+    <Style TargetType="Button"><Setter Property="Background" Value="#232923"/><Setter Property="Foreground" Value="{StaticResource TextBrush}"/><Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/><Setter Property="Padding" Value="12,8"/><Setter Property="Margin" Value="0,0,8,0"/><Setter Property="Cursor" Value="Hand"/></Style>
+    <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}"><Setter Property="Background" Value="#286B35"/><Setter Property="BorderBrush" Value="#388B48"/></Style>
+    <Style TargetType="TextBox"><Setter Property="Background" Value="{StaticResource InputBrush}"/><Setter Property="Foreground" Value="{StaticResource TextBrush}"/><Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/><Setter Property="Padding" Value="8"/><Setter Property="CaretBrush" Value="{StaticResource GreenBrush}"/></Style>
+    <Style TargetType="ComboBox"><Setter Property="Background" Value="{StaticResource InputBrush}"/><Setter Property="Foreground" Value="Black"/><Setter Property="Padding" Value="6"/></Style>
+    <Style TargetType="TabControl"><Setter Property="Background" Value="{StaticResource BackgroundBrush}"/><Setter Property="Foreground" Value="{StaticResource TextBrush}"/><Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/></Style>
+    <Style TargetType="TabItem"><Setter Property="Background" Value="{StaticResource SideBrush}"/><Setter Property="Foreground" Value="{StaticResource TextBrush}"/><Setter Property="Padding" Value="16,9"/></Style>
+  </Application.Resources>
+</Application>

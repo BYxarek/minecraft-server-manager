@@ -1,0 +1,10 @@
+# Minecraft server binaries belong to Mojang/Microsoft and stay local.
+/deffolt-minecraft-server/
+**/bin/
+**/obj/
+/dist/
+/.vs/
+*.user
+*.suo
+*.log
+/legacy-panel/data/

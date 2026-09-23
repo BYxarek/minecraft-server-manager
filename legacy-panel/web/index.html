@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="panel-token" content="__PANEL_TOKEN__">
+  <title>Панель Bedrock</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside>
+    <div class="brand"><span class="cube"></span><div><b>Bedrock</b><small>панель <span id="panelVersion">0.1.0</span></small></div></div>
+    <nav>
+      <button class="active" data-page="overview">Обзор</button>
+      <button data-page="console">Консоль</button>
+      <button data-page="settings">Настройки</button>
+      <button data-page="players">Игроки</button>
+      <button data-page="worlds">Миры и копии</button>
+      <button data-page="packs">Наборы</button>
+    </nav>
+    <div class="local">Доступ: только 127.0.0.1</div>
+  </aside>
+  <main>
+    <header><div><h1 id="title">Обзор</h1><p id="subtitle">Состояние выделенного сервера</p></div><span id="statusBadge" class="badge off">Остановлен</span></header>
+    <div id="notice" class="notice hidden"></div>
+
+    <section id="overview" class="page active">
+      <div id="updateCard" class="notice hidden"></div>
+      <div class="actions">
+        <button id="startBtn" class="primary">Запустить</button>
+        <button id="stopBtn">Остановить</button>
+        <button id="restartBtn">Перезапустить</button>
+      </div>
+      <div class="cards">
+        <article><span>Версия сервера</span><strong id="version">—</strong><small id="clientVersion">—</small></article>
+        <article><span>Оперативная память</span><strong id="memory">—</strong><small id="cpu">—</small></article>
+        <article><span>Время работы</span><strong id="uptime">—</strong><small id="pid">—</small></article>
+        <article><span>Подключение</span><strong id="port">—</strong><small id="transport">—</small></article>
+      </div>
+      <article class="panel"><h2 id="serverName">Minecraft Server</h2><dl><div><dt>Активный мир</dt><dd id="levelName">—</dd></div><div><dt>Лимит игроков</dt><dd id="maxPlayers">—</dd></div><div><dt>Управление</dt><dd id="managed">—</dd></div></dl></article>
+      <div class="two-columns dashboard-row">
+        <article class="panel"><div class="panel-head"><div><h2>Нагрузка за 6 часов</h2><p>Память и загрузка процессора сохраняются локально.</p></div></div><canvas id="metricsChart" height="210"></canvas><div class="chart-legend"><span class="memory-line">Память, МБ</span><span class="cpu-line">CPU, %</span></div></article>
+        <article class="panel"><h2>Автовосстановление</h2><p>Перезапускает сервер после неожиданного завершения, но прекращает попытки при повторяющемся сбое.</p><label class="switch standalone"><span id="autoRestartText">Включено</span><input id="autoRestart" type="checkbox" checked></label><label class="compact-field">Попыток за 5 минут <input id="restartAttempts" type="number" min="1" max="10" value="3"></label><button id="savePanelConfig" class="primary full">Сохранить</button></article>
+      </div>
+    </section>
+
+    <section id="console" class="page">
+      <article class="panel console-panel"><div class="panel-head"><h2>Вывод сервера</h2><button id="refreshLogs">Обновить</button></div><pre id="logs">Сервер ещё не запускался из панели.</pre><form id="commandForm"><input id="command" autocomplete="off" placeholder="say Привет! или help"><button class="primary">Отправить</button></form></article>
+    </section>
+
+    <section id="settings" class="page">
+      <div class="settings-toolbar"><div><h2>Настройки сервера</h2><p>Выберите значения — панель сама изменит нужные строки в server.properties.</p></div><button id="saveProperties" class="primary">Сохранить настройки</button></div>
+      <div id="settingsForm"></div>
+      <details class="panel advanced"><summary>Для опытных: исходный файл</summary><p>Здесь доступны редкие, экспериментальные и ещё не включённые параметры. Обычные настройки удобнее менять карточками выше.</p><textarea id="propertiesRaw" spellcheck="false"></textarea></details>
+      <p class="hint">Изменения применятся после перезапуска сервера. Перед сохранением автоматически создаётся <code>server.properties.panel.bak</code>.</p>
+    </section>
+
+    <section id="players" class="page">
+      <article class="panel online-panel"><div class="panel-head"><div><h2>Сейчас на сервере</h2><p>Можно отключить игрока или изменить его уровень оператора.</p></div><button id="refreshPlayers">Обновить</button></div><div id="onlinePlayers"></div></article>
+      <div class="two-columns">
+        <article class="panel"><div class="panel-head"><div><h2>Белый список</h2><p>Xbox Gamertag; применяется сразу через allowlist reload.</p></div><button id="addAllowed">+ Игрок</button></div><div id="allowlist"></div><button id="saveAllowlist" class="primary full">Сохранить список</button></article>
+        <article class="panel"><div class="panel-head"><div><h2>Права по XUID</h2><p>Права лучше выдавать командами op/deop после входа игрока.</p></div><button id="addPermission">+ XUID</button></div><div id="permissions"></div><button id="savePermissions" class="primary full">Сохранить права</button></article>
+      </div>
+    </section>
+
+    <section id="worlds" class="page">
+      <div class="actions"><button id="importWorld" class="primary">Импортировать .mcworld / ZIP</button><input id="worldFile" type="file" accept=".mcworld,.zip" hidden></div>
+      <div class="two-columns">
+        <article class="panel"><div class="panel-head"><div><h2>Миры</h2><p>Переключать активный мир можно только при остановленном сервере.</p></div></div><div id="worldList"></div></article>
+        <article class="panel"><div class="panel-head"><div><h2>Резервные копии</h2><p>ZIP-копии активного мира в папке backups.</p></div><button id="createBackup" class="primary">Создать</button></div><div id="backupList"></div></article>
+      </div>
+    </section>
+
+    <section id="packs" class="page">
+      <div class="actions"><button id="importPack" class="primary">Установить .mcpack / ZIP</button><input id="packFile" type="file" accept=".mcpack,.zip" hidden></div>
+      <article class="panel"><div class="panel-head"><div><h2>Наборы ресурсов и поведения</h2><p>Включение и удаление доступны при остановленном сервере. Удалённые наборы переносятся в panel/data/removed-packs.</p></div><button id="refreshPacks">Обновить</button></div><div id="packList"></div></article>
+    </section>
+  </main>
+  <script src="settings.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

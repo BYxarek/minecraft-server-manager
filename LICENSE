@@ -1,0 +1,18 @@
+Minecraft Server Manager Source-Available Noncommercial Share-Alike License 1.0
+Copyright (c) 2026 BYxarek
+
+This license applies only to the original application code and documentation in this repository. Minecraft server binaries, assets, names, and trademarks belong to their respective owners and are not licensed here.
+
+Permission is granted to use, copy, study, modify, and distribute the covered work and modified versions for noncommercial purposes, subject to all conditions below:
+
+1. Attribution. Every distributed copy and modified version must keep this copyright notice and this license. Its README, About screen, or equivalent prominent documentation must include a working link to https://github.com/BYxarek/minecraft-server-manager and state that the work is based on this repository. Modified versions must identify their changes.
+
+2. Noncommercial use. You may not use the covered work or a modified version primarily for commercial advantage or monetary compensation. Commercial licensing requires separate written permission from the copyright holder.
+
+3. Source availability and share alike. If you distribute the covered work or a modified version in any form, including an executable, you must provide its complete corresponding source code at no charge, with build instructions, under this same license. The source must be available to every recipient for as long as the distributed version is available. You may add your own original components under compatible terms, but you may not impose terms on the covered work or its modifications that conflict with this license.
+
+4. No sublicensing of third-party software. This license gives no right to redistribute Minecraft software or any other third-party material.
+
+The covered work is provided "as is", without warranty of any kind, to the extent permitted by law. The copyright holder is not liable for claims or damages arising from use of the covered work.
+
+This is a source-available license, not an OSI-approved open-source license, because it excludes commercial use.
