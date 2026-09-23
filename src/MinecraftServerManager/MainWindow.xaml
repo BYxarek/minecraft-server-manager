@@ -12,6 +12,7 @@
           <ListBox x:Name="ServerList" SelectionChanged="ServerList_SelectionChanged" Background="Transparent" BorderThickness="0" Foreground="{StaticResource TextBrush}" MinHeight="200" MaxHeight="430"/>
           <Button x:Name="CreateButton" Content="+ Создать сервер" Style="{StaticResource PrimaryButton}" Margin="0,14,0,8" Click="CreateButton_Click"/>
           <Button Content="Подключить папку" Margin="0" Click="AttachButton_Click"/>
+          <Button Content="Настройки шаблонов" Margin="0,8,0,0" Click="TemplatesButton_Click"/>
         </StackPanel>
         <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
           <TextBlock x:Name="UpdateStatus" Text="Проверка обновлений…" TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" FontSize="12" Margin="4,0,0,12"/>

@@ -10,6 +10,7 @@ namespace MinecraftServerManager;
 public partial class MainWindow : Window
 {
     private readonly ProfileStore store = new();
+    private readonly TemplateStore templates = new();
     private readonly ServerManager manager = new();
     private readonly DispatcherTimer refreshTimer = new() { Interval = TimeSpan.FromSeconds(2) };
     private ServerProfile? Selected => ServerList.SelectedItem as ServerProfile;
@@ -27,7 +28,16 @@ public partial class MainWindow : Window
         VersionText.Text = "Версия " + typeof(MainWindow).Assembly.GetName().Version?.ToString(3);
         refreshTimer.Tick += (_, _) => Refresh();
         refreshTimer.Start();
-        Loaded += async (_, _) => await CheckForUpdates(false);
+        Loaded += async (_, _) =>
+        {
+            if (!templates.HasAny)
+            {
+                var setup = new TemplateSetupDialog(templates, true) { Owner = this };
+                setup.ShowDialog();
+                if (!templates.HasAny) ShowNotice("Добавьте ZIP Bedrock или JAR Java в настройках шаблонов, чтобы создавать новые серверы.");
+            }
+            await CheckForUpdates(false);
+        };
     }
 
     private void ShowNotice(string message)
@@ -55,7 +65,7 @@ public partial class MainWindow : Window
     }
     private void AddServer(bool attach)
     {
-        var dialog = new ServerDialog(attach, NextPort(store.Profiles, ServerEdition.Bedrock), NextPort(store.Profiles, ServerEdition.Java)) { Owner = this };
+        var dialog = new ServerDialog(templates, attach, NextPort(store.Profiles, ServerEdition.Bedrock), NextPort(store.Profiles, ServerEdition.Java)) { Owner = this };
         if (dialog.ShowDialog() != true || dialog.Profile is null) return;
         Run(() =>
         {
@@ -73,6 +83,12 @@ public partial class MainWindow : Window
     }
     private void CreateButton_Click(object sender, RoutedEventArgs e) => AddServer(false);
     private void AttachButton_Click(object sender, RoutedEventArgs e) => AddServer(true);
+    private void TemplatesButton_Click(object sender, RoutedEventArgs e)
+    {
+        var setup = new TemplateSetupDialog(templates, false) { Owner = this };
+        setup.ShowDialog();
+        if (templates.HasAny) ClearNotice();
+    }
 
     private void ServerList_SelectionChanged(object sender, SelectionChangedEventArgs e) => Refresh(true);
     private void Pages_SelectionChanged(object sender, SelectionChangedEventArgs e)
