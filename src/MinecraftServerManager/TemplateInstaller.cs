@@ -9,17 +9,20 @@ public static class TemplateInstaller
         var directory = new DirectoryInfo(AppContext.BaseDirectory);
         for (var i = 0; i < 7 && directory != null; i++, directory = directory.Parent)
         {
-            var source = Path.Combine(directory.FullName, "deffolt-minecraft-server");
-            if (!System.IO.Directory.Exists(source)) continue;
-            if (edition == ServerEdition.Java)
+            foreach (var folder in new[] { "defaults", "deffolt-minecraft-server" })
             {
-                var jar = Path.Combine(source, "server.jar");
-                if (File.Exists(jar)) return jar;
-            }
-            else
-            {
-                var zip = System.IO.Directory.GetFiles(source, "bedrock-server-*.zip").FirstOrDefault();
-                if (zip != null) return zip;
+                var source = Path.Combine(directory.FullName, folder);
+                if (!System.IO.Directory.Exists(source)) continue;
+                if (edition == ServerEdition.Java)
+                {
+                    var jar = Path.Combine(source, "server.jar");
+                    if (File.Exists(jar)) return jar;
+                }
+                else
+                {
+                    var zip = System.IO.Directory.GetFiles(source, "bedrock-server-*.zip").FirstOrDefault();
+                    if (zip != null) return zip;
+                }
             }
         }
         return null;
