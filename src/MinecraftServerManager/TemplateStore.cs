@@ -27,19 +27,19 @@ public sealed class TemplateStore
     }
     public string Description(ServerEdition edition)
     {
-        if (GetPath(edition) == null) return "Файл не добавлен";
-        return records.TryGetValue(edition, out var record) ? $"{record.FileName} · {record.ImportedAt:dd.MM.yyyy HH:mm}" : "Файл добавлен";
+        if (GetPath(edition) == null) return T("TemplateMissing");
+        return records.TryGetValue(edition, out var record) ? F("TemplateDescription", record.FileName, record.ImportedAt) : T("TemplateAdded");
     }
 
     public void Import(ServerEdition edition, string source)
     {
-        if (!File.Exists(source)) throw new FileNotFoundException("Выбранный файл не найден.", source);
+        if (!File.Exists(source)) throw new FileNotFoundException(T("SelectedFileMissing"), source);
         var extension = edition == ServerEdition.Bedrock ? ".zip" : ".jar";
-        if (!source.EndsWith(extension, StringComparison.OrdinalIgnoreCase)) throw new InvalidDataException($"Нужен файл {extension}.");
+        if (!source.EndsWith(extension, StringComparison.OrdinalIgnoreCase)) throw new InvalidDataException(F("RequiredExtension", extension));
         using (var archive = ZipFile.OpenRead(source))
         {
             var required = edition == ServerEdition.Bedrock ? "bedrock_server.exe" : "META-INF/MANIFEST.MF";
-            if (archive.GetEntry(required) == null) throw new InvalidDataException($"Файл не похож на официальный сервер {edition}: нет {required}.");
+            if (archive.GetEntry(required) == null) throw new InvalidDataException(F("InvalidServerArchive", edition, required));
         }
         Directory.CreateDirectory(root);
         var target = Path.Combine(root, edition == ServerEdition.Bedrock ? "bedrock.zip" : "server.jar");

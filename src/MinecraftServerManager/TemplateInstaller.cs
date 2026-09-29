@@ -8,23 +8,33 @@ public static class TemplateInstaller
     {
         var target = Path.GetFullPath(profile.Directory);
         if (System.IO.Directory.Exists(target) && System.IO.Directory.EnumerateFileSystemEntries(target).Any())
-            throw new InvalidOperationException("Папка сервера должна быть пустой. Для существующего сервера используйте «Подключить».");
+            throw new InvalidOperationException(T("EmptyFolderRequired"));
         if (profile.Edition == ServerEdition.Bedrock && !source.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
-            throw new InvalidOperationException("Для Bedrock нужен ZIP-архив официального сервера.");
+            throw new InvalidOperationException(T("BedrockZipRequired"));
         if (profile.Edition == ServerEdition.Java && !source.EndsWith(".jar", StringComparison.OrdinalIgnoreCase))
-            throw new InvalidOperationException("Для Java нужен файл server.jar.");
-        System.IO.Directory.CreateDirectory(target);
-        if (profile.Edition == ServerEdition.Bedrock)
+            throw new InvalidOperationException(T("JavaJarRequired"));
+        var staging = target + ".install-" + Guid.NewGuid().ToString("N");
+        var originalExists = System.IO.Directory.Exists(target);
+        System.IO.Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+        System.IO.Directory.CreateDirectory(staging);
+        try
         {
-            ZipFile.ExtractToDirectory(source, target);
-            if (!File.Exists(Path.Combine(target, "bedrock_server.exe")))
-                throw new InvalidDataException("Архив не содержит bedrock_server.exe в корне.");
+            if (profile.Edition == ServerEdition.Bedrock)
+            {
+                ZipFile.ExtractToDirectory(source, staging);
+                if (!File.Exists(Path.Combine(staging, "bedrock_server.exe")))
+                    throw new InvalidDataException(T("BedrockExecutableNotInArchive"));
+            }
+            else
+            {
+                File.Copy(source, Path.Combine(staging, "server.jar"));
+                File.WriteAllText(Path.Combine(staging, "eula.txt"), "eula=false\n");
+            }
+            var stagingProfile = new ServerProfile { Directory = staging, Edition = profile.Edition, Port = profile.Port };
+            PropertiesFile.Set(stagingProfile, "server-port", profile.Port.ToString());
+            if (originalExists) System.IO.Directory.Delete(target);
+            System.IO.Directory.Move(staging, target);
         }
-        else
-        {
-            File.Copy(source, Path.Combine(target, "server.jar"));
-            File.WriteAllText(Path.Combine(target, "eula.txt"), "eula=false\n");
-        }
-        PropertiesFile.Set(profile, "server-port", profile.Port.ToString());
+        finally { if (System.IO.Directory.Exists(staging)) System.IO.Directory.Delete(staging, true); }
     }
 }

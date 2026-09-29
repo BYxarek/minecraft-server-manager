@@ -14,6 +14,8 @@ public sealed class ServerProfile
     public int MemoryMb { get; set; } = 2048;
     public string JavaPath { get; set; } = "java";
     public bool AutoRestart { get; set; }
+    public int BackupIntervalHours { get; set; }
+    public DateTime? LastBackupUtc { get; set; }
     [JsonIgnore] public string Endpoint => $"127.0.0.1:{Port}";
     public override string ToString() => $"{Name}  ·  {Edition}  ·  {Port}";
 }
